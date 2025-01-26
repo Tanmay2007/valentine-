@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            text-align: center;
+            background: linear-gradient(to top, #ff9a9e, #fad0c4, #fbc2eb);
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1, h2, p {
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .center-content, .quiz-section, .final-section {
+            margin-top: 50px;
+            padding: 20px;
+            width: 80%;
+            max-width: 700px;
+        }
+
+        /* Button Styles */
+        .button {
+            font-size: 24px;
+            padding: 20px 40px;
+            margin: 20px 10px;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background: linear-gradient(135deg, #ff758c, #ff6b42);
+            transform: scale(1.2);
+        }
+
+        /* Quiz Section */
+        #quiz {
+            display: none;
+            background: rgba(255, 255, 255, 0.9);
+            margin: 50px auto;
+            padding: 40px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 700px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Popup */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 2px solid #d6336c;
+            border-radius: 10px;
+            padding: 50px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            animation: fadeIn 2s ease forwards;
+            z-index: 9999;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translate(-50%, -60%); }
+            100% { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        .popup img {
+            width: 350px;
+            margin: 20px auto;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+        }
+
+        /* Hearts Floating Animation */
+        .heart {
+            position: absolute;
+            color: rgba(255, 20, 147, 0.7);
+            font-size: 35px;
+            animation: floatUp 3s infinite ease-in-out;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-300px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="center-content">
+        <h1>Will You Be My Valentine?</h1>
+        <button class="button" onclick="showQuiz()">Yes</button>
+        <button class="button" onclick="noClicked()">No</button>
+    </div>
+
+    <div id="quiz" class="quiz-section">
+        <h2>Quiz: How well do you know me?</h2>
+        <form onsubmit="checkQuiz(event)">
+            <p>What’s my favorite thing about you?</p>
+            <label>
+                <input type="radio" name="q1" value="Your smile"> Your beautiful smile
+            </label>
+            <br>
+            <label>
+                <input type="radio" name="q1" value="Your smile"> Your beautiful smile
+            </label>
+            <br>
+            <label>
+                <input type="radio" name="q1" value="Your smile"> Your beautiful smile
+            </label>
+            <br>
+            <label>
+                <input type="radio" name="q1" value="Your smile"> Your beautiful smile
+            </label>
+            <br>
+            <label>
+                <input type="radio" name="q1" value="Your smile"> Your beautiful smile
+            </label>
+            <br>
+            <label>
+                <input type="radio" name="q1" value="Your smile"> Your beautiful smile
+            </label>
+            <br>
+            <label>
+                <input type="radio" name="q1" value="Your smile"> Your beautiful smile
+            </label>
+            <br>
+            <label>
+                <input type="radio" name="q1" value="Your smile"> Your beautiful smile
+            </label>
+            <br><br>
+            <input type="submit" class="button" value="Submit">
+        </form>
+        <div id="result" style="display:none; margin-top: 20px;"></div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Grand Pop-up for Bouquet and Message -->
+    <div class="popup" id="popup">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/Red_rose_bouquet.jpg" alt="Bouquet">
+        <h1>Yayyyy! ❤️</h1>
+        <p>I love you, Anushka!</p>
+    </div>
+
+    <script>
+        function showQuiz() {
+            document.querySelector(".center-content").style.display = "none";
+            document.getElementById("quiz").style.display = "block";
+            spawnHearts(); // Start floating hearts when quiz is shown
+        }
+
+        function noClicked() {
+            alert("No isn't an option! Try again.");
+        }
+
+        function checkQuiz(event) {
+            event.preventDefault();
+            const resultDiv = document.getElementById("result");
+            resultDiv.style.display = "block";
+            resultDiv.innerHTML = `
+                Nope! The correct answer isn’t in the options you chose.<br>
+                It’s <span style="color: green; font-weight: bold;">the word 'YOU' in the question itself!</span>
+                <br><br>Because YOU are my favorite thing, Anushka. ❤️
+            `;
+            setTimeout(showPopup, 15000); // Show the pop-up after 15 seconds
+        }
+
+        function showPopup() {
+            document.getElementById("popup").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        function spawnHearts() {
+            for (let i = 0; i < 10; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '❤️';
+                heart.style.top = `${Math.random() * 100}%`;
+                heart.style.left = `${Math.random() * 100}%`;
+                document.body.appendChild(heart);
+                heart.style.animationDuration = `${Math.random() * 2 + 3}s`;
+            }
+        }
+    </script>
+</body>
+</html>
